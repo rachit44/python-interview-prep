@@ -1,0 +1,156 @@
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+
+{% block title %}Python Interview Prep - Master Django & FastAPI{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="gradient-bg text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Master Python Interviews
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                Comprehensive guide to Django, FastAPI, and Python concepts with real code examples
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'topic_list' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-300">
+                    <i class="fas fa-play mr-2"></i>Start Learning
+                </a>
+                <a href="#stats" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+                    <i class="fas fa-chart-bar mr-2"></i>View Progress
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<section id="stats" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="p-6">
+                <div class="text-4xl font-bold text-blue-600 mb-2">{{ total_topics }}</div>
+                <div class="text-gray-600">Interview Topics</div>
+            </div>
+            <div class="p-6">
+                <div class="text-4xl font-bold text-green-600 mb-2">{{ total_categories }}</div>
+                <div class="text-gray-600">Categories</div>
+            </div>
+            <div class="p-6">
+                <div class="text-4xl font-bold text-purple-600 mb-2">100+</div>
+                <div class="text-gray-600">Code Examples</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Explore Categories</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Dive deep into specific areas of Python development with curated topics and examples
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for category in categories %}
+            <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mr-4" style="background-color: {{ category.color }}20;">
+                        <i class="fas fa-{{ category.icon }} text-2xl" style="color: {{ category.color }};"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">{{ category.name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ category.topics.count }} topics</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-4">{{ category.description }}</p>
+                <a href="{% url 'topic_list' %}?category={{ category.id }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                    Explore Topics
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Topics Section -->
+{% if featured_topics %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Topics</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Start with these essential topics that frequently appear in Python interviews
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for topic in featured_topics %}
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 card-hover">
+                <div class="flex items-start justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 flex-1 mr-2">
+                        <a href="{% url 'topic_detail' topic.pk %}" class="hover:text-blue-600">
+                            {{ topic.title }}
+                        </a>
+                    </h3>
+                    <span class="difficulty-badge difficulty-{{ topic.difficulty }}">
+                        {{ topic.get_difficulty_display }}
+                    </span>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">{{ topic.description|truncatewords:20 }}</p>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                    <span>
+                        <i class="fas fa-clock mr-1"></i>
+                        {{ topic.estimated_time }}
+                    </span>
+                    <span>
+                        <i class="fas fa-code mr-1"></i>
+                        {{ topic.code_examples.count }} examples
+                    </span>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'topic_detail' topic.pk %}" class="block w-full text-center bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                        Study Topic
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="gradient-bg text-white py-16">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold mb-4">Ready to Start Your Interview Preparation?</h2>
+        <p class="text-xl text-blue-100 mb-8">
+            Access comprehensive topics, code examples, and practice questions to ace your Python interviews
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'topic_list' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-300">
+                <i class="fas fa-rocket mr-2"></i>Start Now
+            </a>
+            <a href="{% url 'topic_list' %}?difficulty=beginner" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+                <i class="fas fa-graduation-cap mr-2"></i>Beginner Guide
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+// Load stats dynamically
+fetch('/api/stats/')
+    .then(response => response.json())
+    .then(data => {
+        console.log('Stats loaded:', data);
+    })
+    .catch(error => console.error('Error loading stats:', error));
+</script>
+{% endblock %}
